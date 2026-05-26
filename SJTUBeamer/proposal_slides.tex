@@ -16,7 +16,8 @@
 
 \usetheme[max,blue]{sjtubeamer}
 
-\title[FluxLink --- Project Proposal]{\textbf{FluxLink}}
+\title[FluxLink · Project Proposal]%
+  {\textbf{FluxLink}: A Unified Adaptive Platform\\for Secure Multi-Transport File Transfer}
 \subtitle{VE441 · App Development for Entrepreneurs · Project Proposal}
 \author{Sun Qizhen \and Zhang Jinbin \and Li Yuhao \and He Yumeng}
 \institute[UM-SJTU JI]{UM-SJTU Joint Institute · Shanghai Jiao Tong University}
@@ -27,7 +28,7 @@
 \maketitle
 
 % ----------------------------------------------------------------
-% Title / Elevator Pitch
+% Elevator Pitch
 % ----------------------------------------------------------------
 \begin{frame}{FluxLink --- Elevator Pitch}
   \begin{block}{}
@@ -82,10 +83,10 @@
       \toprule
       \textbf{Full Name} & \textbf{jAccount} & \textbf{Task Assignment} & \textbf{Technical Strengths} \\
       \midrule
-      Sun Qizhen  & qz\_sun       & Product architecture · Protocol routing engine · Network path scoring & Networking · Distributed systems · System design \\
-      Zhang Jinbin & moranxuege   & Mobile client (Android/iOS) · Cross-platform UI/UX & Android (Kotlin) · iOS (Swift) · UX implementation \\
-      Li Yuhao    & y4954he      & End-to-end encryption · QR/token handshake · Encrypted chat & Cryptography · Backend security · Protocol design \\
-      He Yumeng   & 17521218310  & Relay server · Deployment · Testing · Cache policy & Backend · DevOps · QA · Django REST \\
+      Sun Qizhen   & qz\_sun      & Product architecture · Protocol routing engine · Network path scoring & Networking · Distributed systems · System design \\
+      Zhang Jinbin & moranxuege   & PM · Mobile client (Android/iOS) · Cross-platform UI/UX            & Android (Kotlin) · iOS (Swift) · UX implementation \\
+      Li Yuhao     & y4954he      & End-to-end encryption · QR/token handshake · Encrypted chat         & Cryptography · Backend security · Protocol design \\
+      He Yumeng    & 17521218310  & Relay server · Deployment · Testing · Cache policy                  & Backend · DevOps · QA · Django REST \\
       \bottomrule
     \end{tabular}%
   }
@@ -97,7 +98,7 @@
     \textbf{Product \& Research}\\[0.3em]
     \small Sun Qizhen\\routing logic \& protocol priority
     \column{0.25\textwidth}
-    \textbf{Client \& UX}\\[0.3em]
+    \textbf{Client \& UX (PM)}\\[0.3em]
     \small Zhang Jinbin\\mobile UI \& cross-platform
     \column{0.25\textwidth}
     \textbf{Networking \& Security}\\[0.3em]
@@ -185,69 +186,78 @@
 % ================================================================
 
 \begin{frame}{Market Overview}
-  \begin{block}{The Problem with Existing Tools}
-    The file transfer market appears saturated, but \textbf{no mainstream product} solves the combined problem of:
-    \begin{itemize}
-      \item Cross-platform compatibility
-      \item Adaptive network routing
-      \item Consistent end-to-end encryption
-      \item Low user decision cost
-    \end{itemize}
-    in a single experience.
+  \begin{block}{The Fundamental Gap}
+    Existing systems typically optimize for \textbf{exactly one transport pathway}. No single consumer app combines all approaches into a unified, adaptive experience.
   \end{block}
 
   \vspace{0.5em}
 
-  \textbf{Competitors analyzed:} WeTransfer · Snapdrop · SHAREit · Send Anywhere · Xender · LocalSend (emerging reference)
+  \begin{columns}[c]
+    \column{0.2\textwidth}
+    \centering\small\textbf{Cloud Storage}\\[0.3em]
+    \footnotesize Google Drive\\iCloud · Dropbox
+    \column{0.2\textwidth}
+    \centering\small\textbf{Messaging Apps}\\[0.3em]
+    \footnotesize WeChat\\WhatsApp · Telegram
+    \column{0.2\textwidth}
+    \centering\small\textbf{Ecosystem / LAN}\\[0.3em]
+    \footnotesize AirDrop\\Nearby Share
+    \column{0.2\textwidth}
+    \centering\small\textbf{Internet P2P}\\[0.3em]
+    \footnotesize Send Anywhere\\Snapdrop
+    \column{0.2\textwidth}
+    \centering\small\textbf{PAKE Transfer}\\[0.3em]
+    \footnotesize Magic Wormhole\\croc
+  \end{columns}
+
+  \vspace{0.8em}
+  \centering\textbf{Competitors analyzed:} Google Drive · WeChat · AirDrop · Send Anywhere · Magic Wormhole
 \end{frame}
 
-\begin{frame}[shrink=22]{Competitor Profiles (1/2)}
+\begin{frame}[shrink=12]{Competitor Profiles (1/2)}
   \begin{columns}[t]
     \column{0.5\textwidth}
-    \begin{block}{WeTransfer --- Web-first Cloud Sharing}
-      \begin{itemize}
-        \item[\faPlus] Simple UI; no recipient install; async delivery; 50M+ downloads; 4.2\faAndroid
-        \item[\faMinus] Internet required; no P2P/LAN; 2 GB free limit; no E2EE; no auto-routing
+    \begin{block}{Google Drive --- Cloud Storage}
+      \small\begin{itemize}
+        \item[\faPlus] Persistent storage; cross-device sync; 15 GB free; no recipient install
+        \item[\faMinus] Double bandwidth (sender $\to$ server $\to$ receiver)
+        \item[\faMinus] Metadata leakage; subscription pressure; unsuited for transient transfer
       \end{itemize}
     \end{block}
-    \vspace{0.5em}
-    \begin{block}{Snapdrop --- Browser-based LAN Sharing}
-      \begin{itemize}
-        \item[\faPlus] Zero install; cross-platform via browser; no account; open source; 4.0\faAndroid
-        \item[\faMinus] LAN-only; browser fragility; no fallback; no transfer recovery
+    \vspace{0.3em}
+    \begin{block}{WeChat --- Messaging App}
+      \small\begin{itemize}
+        \item[\faPlus] 1.3B+ users; already in daily use; integrated cloud storage
+        \item[\faMinus] 100 MB limit; aggressive compression; server upload bottleneck
+        \item[\faMinus] Ecosystem lock-in; super-app surveillance risks
       \end{itemize}
     \end{block}
     \column{0.5\textwidth}
-    \begin{block}{SHAREit --- Mobile-first High-speed Local}
-      \begin{itemize}
-        \item[\faPlus] Extremely fast; 1B+ downloads; cross-platform; handles large files; 3.8\faAndroid
-        \item[\faMinus] Ad-heavy; documented privacy/security issues; no E2EE; trust erosion
+    \begin{block}{AirDrop --- Ecosystem LAN Transfer}
+      \small\begin{itemize}
+        \item[\faPlus] Fast (Bluetooth + Wi-Fi Direct); no account; no internet required
+        \item[\faPlus] Seamless Apple-to-Apple UX
+        \item[\faMinus] Apple-only; proximity-only; no fallback for remote scenarios
+        \item[\faMinus] Contact-discovery leaks phone numbers and email addresses to passive attackers \textit{(Heinrich et al., 2021)}
       \end{itemize}
     \end{block}
   \end{columns}
 \end{frame}
 
-\begin{frame}[shrink=13]{Competitor Profiles (2/2)}
+\begin{frame}[shrink=12]{Competitor Profiles (2/2)}
   \begin{columns}[t]
     \column{0.5\textwidth}
-    \begin{block}{Send Anywhere --- Key-based Transfer}
+    \begin{block}{Send Anywhere --- Internet P2P}
       \begin{itemize}
-        \item[\faPlus] 6-digit key model; wide platform support; encrypted positioning; 4.3\faAndroid
-        \item[\faMinus] No auto-routing; relay-dependent in real networks; no encrypted chat
-      \end{itemize}
-    \end{block}
-    \vspace{0.5em}
-    \begin{block}{Xender --- Group Sharing}
-      \begin{itemize}
-        \item[\faPlus] Fast WiFi Direct; 500M+ downloads; group sharing; 4.0\faAndroid
-        \item[\faMinus] Ad-heavy; no E2EE; limited to local network; no relay fallback
+        \item[\faPlus] Cross-platform (Android, iOS, Web); 6-digit key; no account; 4.3\faAndroid
+        \item[\faMinus] No intelligent routing between LAN/P2P/relay; relay-dependent in most real-world conditions; no resume on failure; no encrypted chat alongside transfer
       \end{itemize}
     \end{block}
     \column{0.5\textwidth}
-    \begin{block}{LocalSend --- Open-source LAN Utility}
+    \begin{block}{Magic Wormhole --- PAKE Transfer}
       \begin{itemize}
-        \item[\faPlus] Clean; privacy-friendly; no account; open source (MIT); 4.7\faAndroid
-        \item[\faMinus] Strictly LAN-bound; no NAT traversal; no relay fallback
+        \item[\faPlus] Strongest cryptographic model (SPAKE2); relay holds no plaintext; resists offline attack; open-source --- \textit{architecturally closest to FluxLink}
+        \item[\faMinus] CLI-only; no mobile app; no LAN fast path (all traffic routed through relay even on same Wi-Fi); no resume; single centralized relay
       \end{itemize}
     \end{block}
   \end{columns}
@@ -256,24 +266,23 @@
 \begin{frame}{Comparison Table}
   \centering
   \resizebox{\textwidth}{!}{%
-    \begin{tabular}{lccccccc}
+    \begin{tabular}{lcccccc}
       \toprule
-      \textbf{Feature} & \textbf{WeTransfer} & \textbf{Snapdrop} & \textbf{SHAREit} & \textbf{Send Anywhere} & \textbf{Xender} & \textbf{LocalSend} & \textbf{FluxLink} \\
+      \textbf{Feature} & \textbf{Google Drive} & \textbf{WeChat} & \textbf{AirDrop} & \textbf{Send Anywhere} & \textbf{Magic Wormhole} & \textbf{FluxLink} \\
       \midrule
-      Cross-platform         & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \checkmark & \textbf{\checkmark} \\
-      LAN transfer           & $\times$   & \checkmark & \checkmark & Partial    & \checkmark & \checkmark & \textbf{\checkmark} \\
-      P2P (no server)        & $\times$   & Partial    & \checkmark & Partial    & \checkmark & \checkmark & \textbf{\checkmark} \\
-      Internet/relay fallback & \checkmark & $\times$  & $\times$   & \checkmark & $\times$   & $\times$   & \textbf{\checkmark} \\
+      Cross-platform          & \checkmark & Partial    & $\times$   & \checkmark & \checkmark & \textbf{\checkmark} \\
+      LAN / local transfer    & $\times$   & $\times$   & \checkmark & $\times$   & $\times$   & \textbf{\checkmark} \\
+      Internet / relay        & \checkmark & \checkmark & $\times$   & \checkmark & \checkmark & \textbf{\checkmark} \\
       \rowcolor{cprimary!15}
-      Auto-routing           & $\times$   & $\times$   & $\times$   & $\times$   & $\times$   & $\times$   & \textbf{\checkmark} \\
+      Auto-routing            & $\times$   & $\times$   & $\times$   & $\times$   & $\times$   & \textbf{\checkmark} \\
       \rowcolor{cprimary!15}
-      E2EE (all modes)       & $\times$   & Partial    & $\times$   & Partial    & $\times$   & \checkmark (LAN) & \textbf{\checkmark} \\
+      E2EE (all modes)        & $\times$   & $\times$   & Partial    & Partial    & \checkmark & \textbf{\checkmark} \\
       \rowcolor{cprimary!15}
-      Encrypted chat         & $\times$   & $\times$   & $\times$   & $\times$   & $\times$   & $\times$   & \textbf{\checkmark} \\
-      No account required    & \checkmark & \checkmark & $\times$   & \checkmark & $\times$   & \checkmark & \textbf{\checkmark} \\
-      Ad-free                & \checkmark & \checkmark & $\times$   & Partial    & $\times$   & \checkmark & \textbf{\checkmark} \\
-      \midrule
-      Google Play rating     & 4.2        & 4.0        & 3.8        & 4.3        & 4.0        & 4.7        & --- \\
+      Encrypted chat          & $\times$   & $\times$   & $\times$   & $\times$   & $\times$   & \textbf{\checkmark} \\
+      No account required     & \checkmark & $\times$   & \checkmark & \checkmark & \checkmark & \textbf{\checkmark} \\
+      No ecosystem lock-in    & \checkmark & $\times$   & $\times$   & \checkmark & \checkmark & \textbf{\checkmark} \\
+      Mobile app              & \checkmark & \checkmark & \checkmark & \checkmark & $\times$   & \textbf{\checkmark} \\
+      Resume on failure       & $\times$   & $\times$   & $\times$   & $\times$   & $\times$   & \textbf{\checkmark} \\
       \bottomrule
     \end{tabular}%
   }
@@ -297,8 +306,8 @@
 
   \begin{enumerate}
     \item \textbf{mDNS-based LAN} --- lowest latency, highest throughput, no internet dependency
-    \item \textbf{Magic Wormhole P2P} --- rendezvous-server-assisted NAT traversal; no file content on server
     \item \textbf{IPv6 direct P2P} --- increasingly viable on campus and carrier networks
+    \item \textbf{QUIC/UDP hole-punching} --- rendezvous-assisted NAT traversal; no file content on relay
     \item \textbf{Centralized relay fallback} --- guarantees delivery under any condition; relay handles ciphertext only
   \end{enumerate}
 
@@ -311,7 +320,7 @@
     \column{0.5\textwidth}
     \begin{block}{Uniform Security Across All Modes}
       \begin{itemize}
-        \item QR / token handshake establishes a session key
+        \item QR / short-code handshake establishes a session key (SPAKE2)
         \item All file chunks and chat messages encrypted \textbf{before leaving the device}
         \item Relay server never sees plaintext
         \item Relay-cached messages cleared weekly
